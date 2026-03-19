@@ -1,7 +1,7 @@
 export interface IStack {
 	push(value: string): void;
-	pop(): string | undefined;
-	peek(): string | undefined;
+	pop(): string;
+	peek(): string;
 	isEmpty(): boolean;
 	size(): number;
 	clear(): void;
