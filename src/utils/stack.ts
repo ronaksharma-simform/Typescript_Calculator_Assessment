@@ -1,5 +1,5 @@
-import { IStack } from "@/interfaces/IStack";
-export class Stack implements IStack {
+import * as Type from "@/types"
+export class Stack implements Type.IStack {
 	private stack: string[];
 	constructor() {
 		this.stack = [];

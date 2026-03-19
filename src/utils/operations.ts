@@ -1,4 +1,5 @@
-export const operators = new Map([
+import * as Type from "@/types"
+export const operators : Type.TOperations = new Map([
 	[
 		"+",
 		{
@@ -78,7 +79,7 @@ export const operators = new Map([
 	],
 ]);
 
-export const functions = new Map([
+export const functions : Type.TFunctions = new Map([
 	["sin", { arity: 1, execute: (x:number) => Math.sin(x), precedence: 6 }],
 	["cos", { arity: 1, execute: (x) => Math.cos(x), precedence: 6 }],
 	["tan", { arity: 1, execute: (x) => Math.tan(x), precedence: 6 }],
@@ -113,7 +114,7 @@ export const functions = new Map([
 		},
 	],
 	["sqrt", { arity: 1, execute: (x) => Math.sqrt(x), precedence: 6 }],
-]);
+]) ;
 
 export function factorial(num: number): number {
 	if (num <= 1) {

@@ -12,7 +12,8 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@/types/*":["types/*"] 
     },
 
     /* Strict Type Checking */
