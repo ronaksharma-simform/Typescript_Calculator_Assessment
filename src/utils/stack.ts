@@ -11,13 +11,13 @@ export class Stack implements IStack {
 		if (this.isEmpty()) {
 			throw new Error("Stack underflow: cannot pop from empty stack.");
 		}
-		return this.stack.pop();
+		return this.stack.pop()!;
 	}
 	peek() {
 		if (this.isEmpty()) {
 			throw new Error("Stack Empty : cannot access from empty stack.");
 		}
-		return this.stack[this.stack.length - 1];
+		return this.stack[this.stack.length - 1]!;
 	}
 	isEmpty() {
 		return this.stack.length === 0;
