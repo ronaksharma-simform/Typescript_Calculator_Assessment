@@ -1,6 +1,23 @@
 {
-  "type": "module",
-  "dependencies": {
-    "@types/node": "^25.5.0"
-  }
+	"name": "typescript-calculator-assessment",
+	"version": "1.0.0",
+	"private": true,
+	"repository": {
+		"url": "https://github.com/ronaksharma-simform/Typescript_Calculator_Assessment/"
+	},
+	"author": {
+		"name": "Ronak Sharma"
+	},
+	"description": "A small TypeScript calculator assessment project",
+	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
+		"watch": "tsc -p tsconfig.build.json --watch",
+		"serve": "npx http-server . -p 8080",
+		"serve:dist": "npx http-server ./dist -p 8080",
+		"start": "npm run build && npm run serve"
+	},
+	"devDependencies": {
+		"typescript": "^5.2.2",
+		"http-server": "^14.1.1"
+	}
 }
