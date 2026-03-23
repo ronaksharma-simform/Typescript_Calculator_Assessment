@@ -15,7 +15,7 @@
       "@/*": ["src/*"],
       "@/types/*":["types/*"] 
     },
-
+    // "allowImportingTsExtensions": true,
     /* Strict Type Checking */
     "strict": true,
     "strictNullChecks": true,
