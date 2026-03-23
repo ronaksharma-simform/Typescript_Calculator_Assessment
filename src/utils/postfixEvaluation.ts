@@ -1,26 +1,27 @@
-import {Stack} from "./stack.js";
+import { Stack } from "./stack.js";
 import { operators, functions } from "./operations.js";
 import * as Type from "@/types";
-export default class PostfixEvaluator implements Type.IPostfixEvaluation{
-    operators: Type.TOperations;
-    functions: Type.TFunctions;
+export default class PostfixEvaluator implements Type.IPostfixEvaluation {
+	operators: Type.TOperations;
+	functions: Type.TFunctions;
 	constructor() {
 		this.operators = operators;
 		this.functions = functions;
 	}
-	evaluate(tokens:string[]) {
+	evaluate(tokens: string[]) {
 		if (!Array.isArray(tokens) || tokens.length === 0) {
 			throw new Error("Invalid expression");
 		}
 		const st = new Stack();
 		for (let token of tokens) {
 			if (this.operators.has(token) || this.functions.has(token)) {
-				const currentOperands:number[] = [];
+				const currentOperands: number[] = [];
 				// get current operator or function details
 				let currentOperator = this.operators.has(token)
-					? this.operators.get(token)!
-					: this.functions.get(token)! ;
-
+					? this.operators.get(token)
+					: this.functions.get(token);
+				if (!currentOperator)
+					throw new Error("Operator or Function didnt Exist");
 				if (st.size() < currentOperator.arity) {
 					throw new Error("Malformed Expression");
 				}
