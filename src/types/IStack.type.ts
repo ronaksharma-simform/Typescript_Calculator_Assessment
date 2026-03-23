@@ -1,7 +1,7 @@
-export interface IStack {
-	push(value: string): void;
-	pop(): string;
-	peek(): string;
+export interface IStack<T = string> {
+	push(value: T): void;
+	pop(): T;
+	peek(): T;
 	isEmpty(): boolean;
 	size(): number;
 	clear(): void;
