@@ -1,5 +1,6 @@
-import * as Type from "@/types"
-export class Stack implements Type.IStack {
+import * as Type from "@/types";
+
+export class Stack implements Type.IStack<string> {
 	private stack: string[];
 	constructor() {
 		this.stack = [];

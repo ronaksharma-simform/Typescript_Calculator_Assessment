@@ -1,98 +1,127 @@
 import { operators, functions } from "./operations.js";
 import * as Type from "@/types";
+
 export default class TokenParser implements Type.ITokenizer {
 	operators: Type.TOperations;
 	functions: Type.TFunctions;
+
 	constructor() {
 		this.operators = operators;
 		this.functions = functions;
 	}
+
 	tokenParser(expression: string) {
-		if (!expression || expression.trim() === "") {
-			throw new Error("Expression cannot be empty");
-		}
-		const tempObj: Record<string, () => void> = {
+		this.#validateExpression(expression);
+
+		const tokens: string[] = [];
+		let currentOperand = "";
+		let currentDecimal = false;
+
+		// 🔥 Handler map (clean dispatch)
+		const handlers: Record<string, () => void> = {
 			".": () => {
-				if (!currentDecimal) {
-					if (currentOperand === "") {
-						currentOperand = "0"; // Adding 0 before .
-					}
-					currentOperand += ".";
-					currentDecimal = true;
-				} else {
+				if (currentDecimal) {
 					throw new Error(
-						"Invalid Expression : You cant have more than one decimal point in operand",
+						"Invalid Expression: Multiple decimal points in operand"
 					);
 				}
+				if (currentOperand === "") currentOperand = "0";
+				currentOperand += ".";
+				currentDecimal = true;
 			},
+
 			"(": () => {
 				if (currentOperand !== "") {
 					tokens.push(currentOperand);
+
 					if (!this.functions.has(currentOperand)) {
 						tokens.push("*");
 					}
+
 					currentOperand = "";
+					currentDecimal = false;
 				}
 				tokens.push("(");
 			},
+
 			")": () => {
 				if (currentOperand !== "") {
 					tokens.push(currentOperand);
 					currentOperand = "";
+					currentDecimal = false;
 				}
 				tokens.push(")");
 			},
 		};
 
-		const tokens: string[] = []; // array for storing output token
-		let currentOperand = "";
-		let currentDecimal = false;
-
+		// 🔥 Main loop (flat, readable)
 		for (let key of expression) {
 			if (key === " ") continue;
-			// Handle numbers
-			if (/\d/.test(key)) {
+
+			// 1️⃣ Number
+			if (this.#isDigit(key)) {
 				currentOperand += key;
+				continue;
 			}
-			
-			// Handles operator
-			else if (this.operators.has(key)) {
+
+			// 2️⃣ Special handlers (., (, ))
+			if (handlers[key]) {
+				handlers[key]!();
+				continue;
+			}
+
+			// 3️⃣ Operator
+			if (this.operators.has(key)) {
 				({ currentOperand, currentDecimal } = this.#handleOperator(
 					key,
 					tokens,
 					currentOperand,
-					currentDecimal,
+					currentDecimal
 				));
+				continue;
 			}
-			// Handles functions like sin cos tan log ln , etc.
-			else {
-				if (currentOperand !== "" && /\d/.test(currentOperand)) {
-					tokens.push(currentOperand);
-					tokens.push("*");
-					currentOperand = "";
-				}
-				if (key === "π" || key === "e") {
-					key = key === "π" ? String(Math.PI) : String(Math.E);
-				}
-				currentOperand += key;
+
+			// 4️⃣ Constants
+			if (key === "π" || key === "e") {
+				key = key === "π" ? String(Math.PI) : String(Math.E);
 			}
-			tempObj[key]?.()
+
+			// 5️⃣ Function / variable handling
+			if (currentOperand !== "" && this.#isNumericString(currentOperand)) {
+				tokens.push(currentOperand);
+				tokens.push("*");
+				currentOperand = "";
+				currentDecimal = false;
+			}
+
+			currentOperand += key;
 		}
-		// Push last operand
+
+		// operand push
 		if (currentOperand !== "") {
 			tokens.push(currentOperand);
 		}
 
 		this.#validateEnding(tokens);
-		console.log(tokens);
 		return tokens;
 	}
-	// Helper Functions
-	#validateExpression(expression:string) : void{
+
+	// ---------------- Helpers ----------------
+
+	#isDigit(char: string): boolean {
+		return /\d/.test(char);
+	}
+
+	#isNumericString(str: string): boolean {
+		return /^\d+(\.\d+)?$/.test(str);
+	}
+
+	#validateExpression(expression: string): void {
 		if (!expression || expression.trim() === "") {
 			throw new Error("Expression cannot be empty");
 		}
 	}
+
 	#validateEnding(tokens: string[]): void {
 		if (
 			tokens.length === 0 ||
@@ -100,15 +129,16 @@ export default class TokenParser implements Type.ITokenizer {
 				tokens[tokens.length - 1] !== "!")
 		) {
 			throw new Error(
-				"Invalid Expression: Expression cannot end with operator",
+				"Invalid Expression: Expression cannot end with operator"
 			);
 		}
 	}
+
 	#handleOperator(
 		key: string,
 		tokens: string[],
 		currentOperand: string,
-		currentDecimal: boolean,
+		currentDecimal: boolean
 	): { currentOperand: string; currentDecimal: boolean } {
 		if (currentOperand !== "") {
 			tokens.push(currentOperand);

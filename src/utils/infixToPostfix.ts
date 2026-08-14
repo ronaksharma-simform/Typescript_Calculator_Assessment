@@ -58,9 +58,9 @@ export class InfixtoPostfix implements Type.IPosfixConversion {
 		if (!this.operators.has(current) || !this.operators.has(top))
 			return false;
 
-		const currentOp = this.operators?.get(current)!;
-		const topOp = this.operators?.get(top)!;
-
+		const currentOp = this.operators?.get(current);
+		const topOp = this.operators?.get(top);
+		if(!currentOp || !topOp ) throw new Error("Insufficent Operands")
 		if (currentOp.associativity === "left") {
 			return currentOp.precedence <= topOp.precedence;
 		}

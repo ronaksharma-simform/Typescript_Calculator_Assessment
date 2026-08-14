@@ -1,21 +1,21 @@
 {
   "compilerOptions": {
     /* Language & Environment */
-    "ignoreDeprecations": "6.0",
+    // "ignoreDeprecations": "6.0",
     "target": "ES2021",
     "lib": ["ES2021","DOM"],
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
 
     /* Paths */
     "rootDir": "./src",
     "outDir": "./dist",
-    "baseUrl": ".",
+    // "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@/types/*":["types/*"] 
+      "@/*": ["./src/*"],
+      "@/types/*":["./types/*"] 
     },
-
+    // "allowImportingTsExtensions": true,
     /* Strict Type Checking */
     "strict": true,
     "strictNullChecks": true,
