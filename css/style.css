@@ -27,6 +27,7 @@
 	--scientific-bg: #6c757d;
 	--scientific-text: #ffffff;
 	--scientific-hover: #5a6268;
+	--error-color: #d32f2f;
 	--shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	--shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
@@ -54,6 +55,7 @@ body.dark-mode {
 	--scientific-bg: #505050;
 	--scientific-text: #ffffff;
 	--scientific-hover: #5a5a5a;
+	--error-color: #ef5350;
 	--shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 	--shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
@@ -378,6 +380,87 @@ body {
 	font-size: 14px;
 }
 
+/* ==================== Currency Exchange Panel ==================== */
+.currency-panel {
+	background-color: var(--bg-secondary);
+	border: 1px solid var(--border-color);
+	border-radius: 15px;
+	padding: 20px;
+	box-shadow: var(--shadow-lg);
+	grid-column: 1 / -1;
+}
+
+.currency-header {
+	margin-bottom: 15px;
+	padding-bottom: 15px;
+	border-bottom: 1px solid var(--border-color);
+}
+
+.currency-header h2 {
+	font-size: 18px;
+	font-weight: 600;
+	color: var(--text-primary);
+}
+
+.currency-body {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 15px;
+	align-items: end;
+}
+
+.currency-field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.currency-field label {
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--text-secondary);
+}
+
+.currency-field input,
+.currency-field select {
+	padding: 12px;
+	font-size: 14px;
+	border: 1px solid var(--button-border);
+	border-radius: 8px;
+	background-color: var(--button-bg);
+	color: var(--text-primary);
+}
+
+.currency-field input:focus,
+.currency-field select:focus {
+	outline: 2px solid var(--operator-bg);
+	outline-offset: -1px;
+}
+
+.currency-convert-btn {
+	height: 44px;
+	align-self: end;
+}
+
+.currency-result {
+	grid-column: 1 / -1;
+	font-size: 18px;
+	font-weight: 600;
+	color: var(--text-primary);
+	min-height: 24px;
+}
+
+.currency-result.currency-error {
+	color: var(--error-color);
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.currency-note {
+	grid-column: 1 / -1;
+	color: var(--text-secondary);
+}
+
 /* ==================== Responsive Design ==================== */
 @media (max-width: 768px) {
 	.container {
@@ -415,6 +498,19 @@ body {
 		flex-direction: column;
 		align-items: flex-start;
 		gap: 10px;
+	}
+
+	.currency-panel {
+		grid-column: 1 / -1;
+		padding: 15px;
+	}
+
+	.currency-body {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.currency-convert-btn {
+		grid-column: 1 / -1;
 	}
 }
 
@@ -477,6 +573,18 @@ body {
 
 	.parentheses-info {
 		font-size: 10px;
+	}
+
+	.currency-panel {
+		padding: 12px;
+	}
+
+	.currency-body {
+		grid-template-columns: 1fr;
+	}
+
+	.currency-convert-btn {
+		grid-column: 1;
 	}
 }
 

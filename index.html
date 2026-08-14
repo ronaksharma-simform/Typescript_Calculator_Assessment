@@ -174,6 +174,56 @@
 					<p class="empty">No calculations yet</p>
 				</div>
 			</div>
+
+			<!-- Currency Exchange Panel -->
+			<div class="currency-panel">
+				<div class="currency-header">
+					<h2>Currency Exchange</h2>
+				</div>
+				<div class="currency-body">
+					<div class="currency-field">
+						<label for="currencyDirection">Convert</label>
+						<select id="currencyDirection">
+							<option value="INR_TO_FOREIGN">
+								Indian Rupee (INR) → Foreign Currency
+							</option>
+							<option value="FOREIGN_TO_INR">
+								Foreign Currency → Indian Rupee (INR)
+							</option>
+						</select>
+					</div>
+					<div class="currency-field">
+						<label for="currencyCode">Currency</label>
+						<select id="currencyCode">
+							<option value="USD">US Dollar (USD)</option>
+							<option value="EUR">Euro (EUR)</option>
+							<option value="GBP">British Pound (GBP)</option>
+							<option value="JPY">Japanese Yen (JPY)</option>
+							<option value="AUD">Australian Dollar (AUD)</option>
+						</select>
+					</div>
+					<div class="currency-field">
+						<label for="currencyAmount">Amount</label>
+						<input
+							type="number"
+							id="currencyAmount"
+							min="0"
+							step="any"
+							placeholder="Enter amount"
+						/>
+					</div>
+					<button class="btn btn-equals currency-convert-btn" id="currencyConvertBtn">
+						Convert
+					</button>
+					<div class="currency-result" id="currencyResult"></div>
+					<div class="currency-note">
+						<small
+							>Rates are static reference values for demo purposes and do not
+							reflect live market rates.</small
+						>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<script type="module" src="./dist/index.js"></script>

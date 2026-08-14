@@ -3,6 +3,8 @@ import Calculator from "./utils/Calculator.js";
 import { InfixtoPostfix } from "./utils/infixToPostfix.js";
 import PostfixEvaluator from "./utils/postfixEvaluation.js";
 import TokenParser from "./utils/tokenizer.js";
+import CurrencyConverter from "./utils/currencyExchange.js";
+import type { TConversionDirection, TCurrencyCode } from "./types/index.js";
 const tokenParser = new TokenParser();
 const postfixEvaluater = new PostfixEvaluator();
 const infixToPostfix = new InfixtoPostfix();
@@ -12,6 +14,8 @@ let prev_calculations: string[] = [];
 // Calculator class instance
 const calc = new Calculator(tokenParser, infixToPostfix, postfixEvaluater);
 prev_calculations = calc.getHistory();
+// Currency Converter instance
+const currencyConverter = new CurrencyConverter();
 
 // element selectors
 let themeBtn = document.getElementById("themeBtn") as HTMLButtonElement;
@@ -35,6 +39,22 @@ let historyList = document.getElementById("historyList") as HTMLDivElement;
 let emptyHistoryMessage = document.getElementsByClassName(
 	"empty",
 )[0] as HTMLParagraphElement;
+// Currency exchange element selectors
+let currencyAmountInput = document.getElementById(
+	"currencyAmount",
+) as HTMLInputElement;
+let currencyDirectionSelect = document.getElementById(
+	"currencyDirection",
+) as HTMLSelectElement;
+let currencyCodeSelect = document.getElementById(
+	"currencyCode",
+) as HTMLSelectElement;
+let currencyConvertBtn = document.getElementById(
+	"currencyConvertBtn",
+) as HTMLButtonElement;
+let currencyResult = document.getElementById(
+	"currencyResult",
+) as HTMLDivElement;
 
 // Dark theme toggle Event Listener
 themeBtn.addEventListener("click", () => {
@@ -54,6 +74,14 @@ clearHistoryBtn.addEventListener("click", () => {
 });
 // adding keyboard listener for taking input for keyboard
 body.addEventListener("keydown", (event) => {
+	// Ignore global calculator keyboard shortcuts while the user is typing
+	// into a form control (e.g. the currency exchange amount/select
+	// inputs) so typing/navigating there doesn't leak into the calculator
+	// display.
+	const targetTag = (event.target as HTMLElement | null)?.tagName;
+	if (targetTag === "INPUT" || targetTag === "SELECT" || targetTag === "TEXTAREA") {
+		return;
+	}
 	let currentKeyboardKey = event.key;
 	console.log(currentKeyboardKey.toLowerCase());
 	const keyboardActionObject: Record<string, () => void> = {
@@ -127,6 +155,17 @@ numberBtn.addEventListener("click", (event) => {
 		characterToAdd = result ? result : "";
 	}
 	currentDisplay.innerHTML += characterToAdd;
+	event.stopPropagation();
+});
+// Currency exchange: Convert button click
+currencyConvertBtn.addEventListener("click", () => {
+	handleCurrencyConversion();
+});
+// Currency exchange: allow pressing Enter inside the amount field to convert
+currencyAmountInput.addEventListener("keydown", (event) => {
+	if (event.key === "Enter") {
+		handleCurrencyConversion();
+	}
 	event.stopPropagation();
 });
 function handleOperatorInput(currentTargetElement: HTMLDataListElement) {
@@ -303,4 +342,41 @@ function toggleSign(expression: string) {
 		return expression.slice(0, expression.length - func.length) + toggled;
 	}
 	return expression;
+}
+
+// ==================== Currency Exchange ====================
+function handleCurrencyConversion() {
+	const amount = Number.parseFloat(currencyAmountInput.value);
+	const direction = currencyDirectionSelect.value as TConversionDirection;
+	const currency = currencyCodeSelect.value as TCurrencyCode;
+	try {
+		const convertedAmount = currencyConverter.convert(
+			amount,
+			currency,
+			direction,
+		);
+		currencyResult.classList.remove("currency-error");
+		currencyResult.textContent = formatCurrencyResult(
+			amount,
+			currency,
+			direction,
+			convertedAmount,
+		);
+	} catch (error) {
+		currencyResult.classList.add("currency-error");
+		currencyResult.textContent =
+			error instanceof Error ? error.message : "Invalid conversion";
+	}
+}
+
+function formatCurrencyResult(
+	amount: number,
+	currency: TCurrencyCode,
+	direction: TConversionDirection,
+	convertedAmount: number,
+) {
+	if (direction === "INR_TO_FOREIGN") {
+		return `₹${amount} = ${convertedAmount} ${currency}`;
+	}
+	return `${amount} ${currency} = ₹${convertedAmount}`;
 }
